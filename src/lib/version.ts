@@ -1,12 +1,11 @@
 // The version shown in the sidebar. Keep package.json "version" in step.
-export const VERSION = '0.5.0';
-export const RELEASED = '17 Nov 2026';
+export const VERSION = '0.6.0';
+export const RELEASED = '19 Nov 2026';
 
 export const WHATS_NEW = [
-  'Sound tab: soft music in 5 moods, ducked under your voice',
-  'Sound effects: whoosh, click, camera capture and pop, placed on cuts',
-  '8 style categories: News, Cinematic, Playful and Minimal added',
-  '40 presets (24 new), each with its own background design',
-  'Background: preset colour, any colour, gradient or your photo',
-  'Design picker: 46 grid, shape and abstract patterns, or none',
+  'Agentix Arena Hub: Lite and Pro in one app',
+  'New look: EditAI brand, Neon Lime on dark',
+  'Pro (sign-in): Plan Doc with A/B/C designs and a text layer for every beat',
+  'Pro: Style Trainer and the 10-scene Minimal Paper library',
+  'Lite is unchanged and still needs no account',
 ];

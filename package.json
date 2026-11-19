@@ -1,7 +1,7 @@
 {
-  "name": "agentix-arena-lite",
+  "name": "agentix-arena-hub",
   "private": true,
-  "version": "0.5.0",
+  "version": "0.6.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -12,6 +12,7 @@
   "dependencies": {
     "@huggingface/transformers": "^4.3.2",
     "@mediapipe/tasks-vision": "^1.2.3",
+    "@supabase/supabase-js": "^2.119.1",
     "@vercel/analytics": "^2.0.1",
     "idb-keyval": "^6.3.0",
     "lucide": "^1.73.0",
