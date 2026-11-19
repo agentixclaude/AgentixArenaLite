@@ -49,6 +49,10 @@ export interface Project {
   sound?: Partial<SoundSettings>;
   /** The user's own music track, kept with the project. */
   music?: { name: string; blob: Blob | null };
+  /** Motion quality: 'basic' (default) or 'great' (strong easing, letter stagger, motion blur on export). */
+  motion?: import('./motion').MotionQuality;
+  /** Text layer: 'normal' (default), 'graphics', 'typo' or 'auto' (per scene). */
+  textLayer?: import('./motion').TextLayer;
 }
 
 export type ProjectMeta = Omit<Project, 'file' | 'words' | 'photo' | 'canvasPhoto' | 'brolls' | 'music'> & { hasVideo: boolean };

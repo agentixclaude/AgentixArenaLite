@@ -1,3 +1,4 @@
+import { motionBlurred, cutsOf } from './motion';
 import {
   Input, BlobSource, ALL_FORMATS, CanvasSink, Output, Mp4OutputFormat, BufferTarget,
   CanvasSource, AudioBufferSource, QUALITY_HIGH, canEncodeVideo, canEncodeAudio,
@@ -52,7 +53,7 @@ export interface ExportOpts {
   audio: AudioBuffer | null; onProgress: (p: number) => void; signal?: AbortSignal;
   /** Music + effects bed at the voice's sample rate (mixed under the normalized voice). */
   bed?: AudioBuffer | null;
-  look: Pick<RenderOpts, 'capStyle' | 'key' | 'bg' | 'photo' | 'text' | 'cutout'>;
+  look: Pick<RenderOpts, 'capStyle' | 'key' | 'bg' | 'photo' | 'text' | 'cutout' | 'motion' | 'textLayer'>;
   brolls?: BrollAsset[];
 }
 
@@ -92,6 +93,7 @@ export async function exportMp4(o: ExportOpts): Promise<{ blob: Blob; codec: str
   await output.start();
 
   const n = Math.max(1, Math.round(o.edit.duration * FPS));
+  const cuts = cutsOf(o.edit);
   const times = function* () { for (let i = 0; i < n; i++) yield outToSrc(o.edit.segs, i / FPS); };
   let i = 0;
   for await (const wc of sink.canvasesAtTimestamps(times())) {
@@ -101,7 +103,10 @@ export async function exportMp4(o: ExportOpts): Promise<{ blob: Blob; codec: str
     let si = o.edit.shots.findIndex((s) => t >= s.outS && t < s.outE);
     if (si < 0) si = o.edit.shots.length - 1;
     const bfr: FrameSrc | null = bx && o.edit.shots[si].layout === 'broll' ? await bx.frame(si, i) : null;
-    renderFrame(ctx, o.W, o.H, src, o.edit, o.pack, { ...o.look, keyer, face: o.face, captions: o.captions, t, frameIdx: i, srcT: outToSrc(o.edit.segs, t), broll: () => bfr });
+    const opts = { ...o.look, keyer, face: o.face, captions: o.captions, frameIdx: i, srcT: outToSrc(o.edit.segs, t), broll: () => bfr };
+    // Great: true motion blur, 6 sub-frames across a 180° shutter (same decoded video frame, graphics move).
+    if (o.look.motion === 'great') motionBlurred(ctx, o.W, o.H, t, FPS, (c, tj) => renderFrame(c, o.W, o.H, src, o.edit, o.pack, { ...opts, t: tj }), 6, 0.5, cuts);
+    else renderFrame(ctx, o.W, o.H, src, o.edit, o.pack, { ...opts, t });
     await vsrc.add(i / FPS, 1 / FPS);
     i++;
     if (i % 5 === 0) o.onProgress(i / n * (asrc ? 0.97 : 1));

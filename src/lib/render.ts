@@ -1,3 +1,4 @@
+import { layerFor, drawGraphicsCaption, drawTypography, greatInOut, type MotionQuality, type TextLayer } from './motion';
 // One renderer for preview AND export, so they always match.
 // Layer order (graphics rules): theme bg → B-roll → A-roll → cut-out → fade overlay → text → captions.
 import type { Pack, Bg, CaptionStyleId } from './packs';
@@ -366,6 +367,10 @@ export interface RenderOpts {
   key?: KeySettings | null; keyer?: Keyer | null; bg?: Bg; photo?: { img: CanvasImageSource; w: number; h: number } | null;
   text?: TextOverrides; hits?: Hit[]; sel?: LayerId | null; srcT?: number; cutout?: boolean;
   broll?: (id: string, localT: number) => FrameSrc | null;
+  /** Basic (default) or Great motion: stronger easing, letter stagger; motion blur is added on export. */
+  motion?: MotionQuality;
+  /** Which text layer speaks: Normal caption (default), Graphics caption, Typography, or Auto per scene. */
+  textLayer?: TextLayer;
 }
 
 // ---- Kinetic two-font lockup at the bottom: lockup hook, main-word moments, duotone poster. ----
@@ -449,7 +454,7 @@ export function renderFrame(ctx: CanvasRenderingContext2D, W: number, H: number,
   let morph = 1;
   if (prevShot && shapeOf(prevShot) !== shapeOf(shot) && shapeOf(prevShot) !== 'cut' && shapeOf(shot) !== 'cut') {
     const pd = prevShot.outE - prevShot.outS;
-    morph = inOut(clamp01(lt / MORPH));
+    morph = (o.motion === 'great' ? greatInOut : inOut)(clamp01(lt / MORPH));
     win = lerpWin(winFor(prevShot, g, X, landscapeSrc, pd, pd, cutOK, fit), cur, morph);
   }
   const bgNow = hasBg(shot) || (morph < 1 && !!prevShot && hasBg(prevShot));
@@ -820,7 +825,14 @@ export function renderFrame(ctx: CanvasRenderingContext2D, W: number, H: number,
       // Captions that sit on the preset background rather than footage need dark ink on light presets.
       const onBg = shot.layout === 'polaroid' || shot.layout === 'band' || shot.layout === 'card' || (shot.layout === 'sticker' && !cutOK) || (shot.layout === 'circle' && W < H);
       const light = onBg && !keyed && lum(pack.bg) > 0.4;
-      drawCaption(ctx, o.capStyle, cap, t, { capY: g.capY, capSize: g.capSize, W, H, light }, pack, ov, o.hits);
+      // Text layers (graphics rules §7): one layer speaks at a time; the Normal caption is hidden, not removed.
+      const layer = layerFor(o.textLayer, shot, cap, cap === edit.caps[edit.caps.length - 1]);
+      const great = o.motion === 'great';
+      if (layer === 'typo') drawTypography(ctx, cap, t, W, H, pack, great);
+      else if (layer === 'graphics') {
+        const cy = W > H ? H * 0.78 : Math.min(H * 0.76, (ov.y ?? capY / H) * H);
+        drawGraphicsCaption(ctx, cap, t, W, H, pack, cy, great, !light);
+      } else drawCaption(ctx, o.capStyle, cap, t, { capY: g.capY, capSize: g.capSize, W, H, light }, pack, ov, o.hits);
     }
   }
   if (o.sel && o.hits) { const h = [...o.hits].reverse().find((x) => x.id === o.sel); if (h) drawSelection(ctx, h, W); }

@@ -19,7 +19,7 @@ export const LAYOUT_NAMES: Record<string, string> = {
   arch: 'Arch window', polaroid: 'Polaroid', band: 'Cinema band', duotone: 'Duotone poster', frame: 'Frame break', sticker: 'Sticker',
 };
 
-type Look = Pick<RenderOpts, 'capStyle' | 'key' | 'bg' | 'photo' | 'text' | 'cutout'>;
+type Look = Pick<RenderOpts, 'capStyle' | 'key' | 'bg' | 'photo' | 'text' | 'cutout' | 'motion' | 'textLayer'>;
 interface Props {
   url: string; edit: Edit; pack: Pack; W: number; H: number; face: Face; captions: boolean; look: Look;
   brolls: BrollAsset[]; sel: LayerId | null; onSelect: (l: LayerId | null) => void; onMove: (l: LayerId, x: number, y: number) => void;

@@ -1,3 +1,4 @@
+import { TEXT_LAYERS } from '../lib/motion';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { PACKS, packById, detectTheme, ASPECTS, FONT_LOADS, CAPTION_STYLES, BG_COLORS, BG_GRADIENTS, BG_PATTERNS, type Aspect, type Bg, type CaptionStyleId, type Pack } from '../lib/packs';
 import { GROUPS, MOTIFS, MOTIF_CATS, groupById, type MotifId, type MotifCat } from '../lib/looks';
@@ -224,7 +225,7 @@ export default function Create({ defaultPack, defaultCap, openId, onOpened, onSa
   const capStyle: CaptionStyleId = project && project.capStyle !== 'auto' ? project.capStyle : pack.capStyle;
   const edit = useMemo(() => (project ? buildEdit(project.words, project.srcDur, pack, project.seed, { edits: project.shotEdits, cutout: project.cutout !== false, hook: hookPick }) : null), [project?.words, project?.srcDur, project?.seed, pack.id, pack.group, hookPick, project?.shotEdits, project?.cutout]); // eslint-disable-line react-hooks/exhaustive-deps
   const dims = project ? ASPECTS[project.aspect] : ASPECTS['9:16'];
-  const look = useMemo(() => ({ capStyle, key: project?.screen.on ? project.screen.key : null, bg: project?.bg, photo, text: project?.textProps, cutout: project?.cutout !== false }), [capStyle, project?.screen, project?.bg, photo, project?.textProps, project?.cutout]);
+  const look = useMemo(() => ({ capStyle, key: project?.screen.on ? project.screen.key : null, bg: project?.bg, photo, text: project?.textProps, cutout: project?.cutout !== false, motion: project?.motion ?? 'basic', textLayer: project?.textLayer ?? 'normal' }), [capStyle, project?.screen, project?.bg, photo, project?.textProps, project?.cutout, project?.motion, project?.textLayer]);
 
   // ---------- sound: music bed + effects ----------
   const sound = useMemo(() => soundOf(project?.sound), [project?.sound]);
@@ -665,6 +666,19 @@ export default function Create({ defaultPack, defaultCap, openId, onOpened, onSa
               <button className={'motif' + (motifPick === 'plain' ? ' on' : '')} onClick={() => upd({ motif: 'plain' })}><MotifThumb pack={pack} id="plain" /><span>None</span></button>
               {MOTIFS.filter((m) => m.cat !== 'none' && (designCat === 'all' || m.cat === designCat)).map((m) => <button key={m.id} className={'motif' + (motifPick === m.id ? ' on' : '')} onClick={() => upd({ motif: m.id })}><MotifThumb pack={pack} id={m.id} /><span>{m.name}</span></button>)}
             </div>
+          </div>
+          <div className="card">
+            <div className="card-h"><div className="card-t row"><Icon name="sparkles" size={16} /> Motion</div><div className="card-n">{(project.motion ?? 'basic') === 'great' ? 'Great' : 'Basic'}</div></div>
+            <div className="seg small">
+              <button className={(project.motion ?? 'basic') === 'basic' ? 'on' : ''} onClick={() => upd({ motion: 'basic' })}>Basic</button>
+              <button className={project.motion === 'great' ? 'on' : ''} onClick={() => upd((p) => ({ motion: 'great', textLayer: p.textLayer ?? 'auto' }))}>Great</button>
+            </div>
+            <div className="hint">{project.motion === 'great' ? 'Strong ease-out and spring, letters landing about 2 frames apart, and real motion blur in the exported video. Export takes about 4× longer.' : 'Fast, clean motion. Switch to Great for premium motion graphics.'}</div>
+            <div className="lk-l">Text layer</div>
+            <div className="seg small wrap">
+              {TEXT_LAYERS.map((l) => <button key={l.id} className={(project.textLayer ?? 'normal') === l.id ? 'on' : ''} onClick={() => upd({ textLayer: l.id })} title={l.note}>{l.name}</button>)}
+            </div>
+            <div className="hint">{TEXT_LAYERS.find((l) => l.id === (project.textLayer ?? 'normal'))?.note}. Only one layer shows each line; the Normal caption stays in the SRT and XML.</div>
           </div>
           <div className="card">
             <div className="card-h">
