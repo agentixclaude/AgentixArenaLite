@@ -1,3 +1,4 @@
+import { visualFor, drawVisual, lightLeak, vignette } from './scenes';
 import { layerFor, drawGraphicsCaption, drawTypography, greatInOut, type MotionQuality, type TextLayer } from './motion';
 // One renderer for preview AND export, so they always match.
 // Layer order (graphics rules): theme bg → B-roll → A-roll → cut-out → fade overlay → text → captions.
@@ -797,6 +798,15 @@ export function renderFrame(ctx: CanvasRenderingContext2D, W: number, H: number,
     }
   }
 
+  // Great: the edit itself changes. Speaker shots announce on the face, then a full visual takes over.
+  let visualOn = false;
+  if (o.motion === 'great') {
+    const v = visualFor(edit, si, pack);
+    if (v && lt >= v.start) visualOn = drawVisual(ctx, v, shot, lt - v.start, dur - v.start, W, H, pack, o.frameIdx, src);
+    if (!visualOn) vignette(ctx, W, H, 0.32);
+    if (si > 0) lightLeak(ctx, W, H, lt, pack.accent);
+  }
+
   if (pack.grain > 0) {
     const gc = grain();
     ctx.save();
@@ -808,7 +818,7 @@ export function renderFrame(ctx: CanvasRenderingContext2D, W: number, H: number,
     ctx.restore();
   }
 
-  if (o.captions) {
+  if (o.captions && !visualOn) {
     const hookOn = edit.shots[0]?.mg?.kind === 'hook' && hp.visible;
     const cap = edit.caps.find((c) => t >= c.outS && t < c.outE);
     const cp = o.text?.caption ?? {};

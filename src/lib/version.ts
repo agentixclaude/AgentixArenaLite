@@ -3,6 +3,7 @@ export const VERSION = '0.6.0';
 export const RELEASED = '19 Nov 2026';
 
 export const WHATS_NEW = [
+  'Great motion now changes the edit: speaker stretches become 6 detailed visual scenes (3D object, graph, flow, stat, compare, quote)',
   'Motion: Basic or Great. Great adds strong easing, letters landing 2 frames apart and real motion blur',
   'Text layers: Normal caption, Graphics caption, Typography, or Auto per scene',
   'Agentix Arena Hub: Lite and Pro in one app',

@@ -76,7 +76,7 @@ export async function exportMp4(o: ExportOpts): Promise<{ blob: Blob; codec: str
   const keyer = o.look.key ? new Keyer(2560) : null;
   const needsCut = !o.look.key && o.look.cutout && usesCutout(o.edit);
   if (needsCut) { await loadSegmenter(); resetMaskHistory(); }
-  if (o.edit.shots.some((s) => s.layout === 'card' && s.card === 'object3d')) await load3D();
+  if (o.look.motion === 'great' || o.edit.shots.some((s) => s.layout === 'card' && s.card === 'object3d')) await load3D();
   await loadFonts(textFonts(o.look.text));
   const bx = o.brolls?.length && o.edit.shots.some((s) => s.layout === 'broll') ? await brollExporter(o.brolls, o.edit, FPS) : null;
   const canvas = document.createElement('canvas');
