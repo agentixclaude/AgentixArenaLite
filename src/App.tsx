@@ -65,13 +65,11 @@ export default function App() {
   return (
     <div className="app">
       <aside className="rail">
-        <div className="brand">
-          <svg className="brand-mark" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="16" fill="#DBFF4F" /><path d="M32 13 L51 50 H42 L32 30 L22 50 H13 Z" fill="#090B0E" /><rect x="26" y="40" width="12" height="5" rx="1.5" fill="#090B0E" /></svg>
-          <div>
-            <div className="brand-name">Agentix Arena <span>Hub</span></div>
-            <div className="brand-sub">AI reel editor</div>
-          </div>
-        </div>
+        <a className="brand" href="#create" aria-label={`Agentix Arena ${pro ? 'Pro' : 'Lite'}`} onClick={() => !pro && setTab('create')}>
+          <img className="brand-emblem" src="/brand/emblem.png" alt="" width={120} height={89} />
+          <img className="brand-word" src={pro ? '/brand/wordmark-pro.png' : '/brand/wordmark-lite.png'} alt={`Agentix Arena ${pro ? 'Pro' : 'Lite'}`} width={220} height={pro ? 13 : 31} />
+          <div className="brand-sub">AI reel editor</div>
+        </a>
         <div className="mode" role="group" aria-label="Mode">
           <button className={mode === 'lite' ? 'on' : ''} aria-pressed={mode === 'lite'} onClick={() => setMode('lite')}>Lite</button>
           <button className={mode === 'pro' ? 'on' : ''} aria-pressed={mode === 'pro'} onClick={() => setMode('pro')}>Pro{!user && Icon.lock}</button>
