@@ -37,9 +37,8 @@ input, select, textarea { font: inherit; color: inherit; }
 .rail { background: var(--bg2); border-right: 1px solid var(--line); display: flex; flex-direction: column; padding: 22px 14px 18px; gap: 4px; }
 .brand { display: flex; align-items: center; gap: 10px; padding: 0 8px 22px; color: inherit; text-decoration: none; }
 .brand-emblem { width: 38px; height: auto; display: block; flex: none; }
-.brand-name { font-family: var(--disp); font-weight: 800; font-size: 15px; letter-spacing: -0.01em; line-height: 1.1; white-space: nowrap; }
-.brand-name span { color: var(--orange); }
-.brand-sub { font-size: 10.5px; color: var(--mute); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 3px; }
+.brand-name { font-family: 'Saira', var(--disp); font-stretch: 125%; font-weight: 600; font-size: 14px; letter-spacing: 0.02em; line-height: 1; white-space: nowrap; }
+.brand-tier { font-family: 'Saira', var(--disp); font-stretch: 125%; font-weight: 600; font-size: 10px; letter-spacing: 0.42em; color: var(--orange); margin-top: 5px; line-height: 1; }
 .nav { display: flex; align-items: center; gap: 12px; padding: 11px 12px; border-radius: 10px; color: var(--ink2); font-weight: 500; text-align: left; width: 100%; transition: background .15s, color .15s; }
 .nav:hover { background: var(--panel); color: var(--ink); }
 .nav.on { background: var(--panel2); color: var(--ink); box-shadow: inset 3px 0 0 var(--orange); }
@@ -219,8 +218,8 @@ input, select, textarea { font: inherit; color: inherit; }
   .rail { flex-direction: row; padding: 10px; align-items: center; overflow-x: auto; }
   .brand { padding: 0 10px 0 2px; flex: none; }
   .brand-emblem { width: 34px; }
-  .brand-name { display: none; }
-  .brand-sub, .ver, .nav .num { display: none; }
+  .brand-name, .brand-tier { display: none; }
+  .ver, .nav .num { display: none; }
   .ed-head { flex-wrap: wrap; }
   .ed-head .device-note { order: 3; }
   .nav { width: auto; }

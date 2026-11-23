@@ -67,9 +67,9 @@ export default function App() {
       <aside className="rail">
         <a className="brand" href="#create" onClick={() => !pro && setTab('create')}>
           <img className="brand-emblem" src="/brand/emblem.png" alt="" width={40} height={30} />
-          <div>
-            <div className="brand-name">Agentix Arena <span>{pro ? 'Pro' : 'Lite'}</span></div>
-            <div className="brand-sub">AI reel editor</div>
+          <div aria-label={`Agentix Arena ${pro ? 'Pro' : 'Lite'}`}>
+            <div className="brand-name" aria-hidden="true">ΛGENTIX ΛRENΛ</div>
+            <div className="brand-tier" aria-hidden="true">{pro ? 'PRO' : 'LITE'}</div>
           </div>
         </a>
         <div className="mode" role="group" aria-label="Mode">
