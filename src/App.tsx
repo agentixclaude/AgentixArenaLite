@@ -65,10 +65,12 @@ export default function App() {
   return (
     <div className="app">
       <aside className="rail">
-        <a className="brand" href="#create" aria-label={`Agentix Arena ${pro ? 'Pro' : 'Lite'}`} onClick={() => !pro && setTab('create')}>
-          <img className="brand-emblem" src="/brand/emblem.png" alt="" width={120} height={89} />
-          <img className="brand-word" src={pro ? '/brand/wordmark-pro.png' : '/brand/wordmark-lite.png'} alt={`Agentix Arena ${pro ? 'Pro' : 'Lite'}`} width={220} height={pro ? 13 : 31} />
-          <div className="brand-sub">AI reel editor</div>
+        <a className="brand" href="#create" onClick={() => !pro && setTab('create')}>
+          <img className="brand-emblem" src="/brand/emblem.png" alt="" width={40} height={30} />
+          <div>
+            <div className="brand-name">Agentix Arena <span>{pro ? 'Pro' : 'Lite'}</span></div>
+            <div className="brand-sub">AI reel editor</div>
+          </div>
         </a>
         <div className="mode" role="group" aria-label="Mode">
           <button className={mode === 'lite' ? 'on' : ''} aria-pressed={mode === 'lite'} onClick={() => setMode('lite')}>Lite</button>
